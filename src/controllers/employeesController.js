@@ -28,7 +28,11 @@ const deleteEmployee = (req, res) => {
 }
 
 const getEmployee = (req, res) => {
-    res.json({ "id": req.params.id });
+    const employee = data.employees.find(em=> em.id === parseInt(req.params.id));
+    if(!employee){
+        return res.status(404).json({message: `Employee ID ${req.params.id} not found`});
+    }
+    res.json({ "data": employee });
 }
 
 module.exports = {

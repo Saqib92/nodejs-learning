@@ -16,6 +16,8 @@ app.use(express.static(path.join(__dirname, './src/')));
 
 //Routes
 app.use('/', require('./src/routes/root')); // root stack router
+app.use('/register', require('./src/routes/api/register'));
+app.use('/auth', require('./src/routes/api/auth'));
 app.use('/employees', require('./src/routes/api/employees'));
 
 
