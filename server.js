@@ -3,21 +3,39 @@ const app = express();
 const path = require('path');
 const cors = require('cors');
 const corsOptions = require('./src/config/corsOptions');
+const verifyJWT = require('./src/middleware/verifyJWT');
+const cookieParser = require('cookie-parser');
 
 const PORT = process.env.PORT || 3500;
 
 //Built In middlewares 
-app.use(cors(corsOptions)); // FOR Cors
-app.use(express.urlencoded({ extended: false })); //FOR Urlencoded form data
-app.use(express.json()); //FOR JSON
+
+ // FOR Cors
+app.use(cors(corsOptions));
+
+ //FOR Urlencoded form data
+app.use(express.urlencoded({ extended: false }));
+
+ //FOR JSON
+app.use(express.json());
+
+//Cookie Parser
+app.use(cookieParser());
 
 //for static Images and Files
 app.use(express.static(path.join(__dirname, './src/')));
 
 //Routes
-app.use('/', require('./src/routes/root')); // root stack router
+
+// root stack router
+app.use('/', require('./src/routes/root'));
+
 app.use('/register', require('./src/routes/api/register'));
 app.use('/auth', require('./src/routes/api/auth'));
+app.use('/refresh', require('./src/routes/api/refresh'));
+
+ // Protected Routes with JWT
+app.use(verifyJWT);
 app.use('/employees', require('./src/routes/api/employees'));
 
 
