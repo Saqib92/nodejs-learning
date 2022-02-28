@@ -12,7 +12,7 @@ const handleRefreshTOken = (req, res) => {
     console.log(cookies.jwt);
     const refreshToken = cookies.jwt;
     const foundUser = usersDB.users.find(person => person.refreshToken == refreshToken);
-    if (!foundUser) return res.sendStatus(401); //Unauthorized || User Not Found
+    if (!foundUser) return res.sendStatus(403); //Unauthorized || User Not Found
     // Evaluate JWT
     jwt.verify(
         refreshToken,
@@ -21,7 +21,7 @@ const handleRefreshTOken = (req, res) => {
             if (err || foundUser.email !== decoded.email) return res.sendStatus(403);
             const accessToken = jwt.sign(
                 { 'email': decoded.email },
-                process.eventNames.ACCESS_TOKEN_SECRET,
+                process.env.ACCESS_TOKEN_SECRET,
                 { expiresIn: '30s' }
             );
             res.json({ accessToken })
