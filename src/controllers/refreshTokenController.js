@@ -8,8 +8,7 @@ require('dotenv').config();
 
 const handleRefreshTOken = (req, res) => {
     const cookies = req.cookies;
-    if (!cookies?.jwt) return res.status(401);
-    console.log(cookies.jwt);
+    if (!cookies?.jwt) return res.sendStatus(401);
     const refreshToken = cookies.jwt;
     const foundUser = usersDB.users.find(person => person.refreshToken == refreshToken);
     if (!foundUser) return res.sendStatus(403); //Unauthorized || User Not Found
