@@ -1,10 +1,7 @@
-//For Dummy Data
 const Employee = require('../model/Employee');
-
 
 const getAllEmployees = async (req, res) => {
     const employees = await Employee.find();
-    console.log(employees)
     if (!employees) return res.status(204).json({ message: 'No Employee Found!' });
     res.json(employees);
 }
@@ -14,7 +11,6 @@ const createNewEmployee = async (req, res) => {
         return res.status(400).json({ message: 'First and last name is requireq!' })
     }
     try {
-        console.log(req.body);
         const result = await Employee.create({
             firstName: req.body.firstName,
             lastName: req.body.lastName

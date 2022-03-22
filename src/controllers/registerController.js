@@ -16,8 +16,6 @@ const handelNewUser = async (req, res) => {
             email: email,
             password: hashPassword
         });
-
-        console.log(result);
         res.status(201).json({ 'message': 'user created successfully' });
     }
     catch (err) {

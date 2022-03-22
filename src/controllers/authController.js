@@ -2,7 +2,6 @@ const User = require('../model/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-
 const handleLogin = async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) return res.status(400).json({ 'message': 'Username and Password are Required' });
@@ -27,7 +26,6 @@ const handleLogin = async (req, res) => {
 
         foundUser.refreshToken = refreshToken;
         const result = await foundUser.save();
-        console.log(result);
         res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 }) // in prod add secure: true 
         res.json({ accessToken });
     }
@@ -35,6 +33,5 @@ const handleLogin = async (req, res) => {
         res.sendStatus(401);
     }
 }
-
 
 module.exports = { handleLogin };
