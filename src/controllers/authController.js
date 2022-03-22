@@ -1,17 +1,13 @@
-const usersDB = {
-    users: require('../model/users.json'),
-    setUsers: function (data) { this.users = data }
-};
-
+const User = require('../model/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const fsPromises = require('fs').promises;
-const path = require('path');
+
 
 const handleLogin = async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) return res.status(400).json({ 'message': 'Username and Password are Required' });
-    const foundUser = usersDB.users.find(person => person.email == email);
+
+    const foundUser = await User.findOne({ email: email }).exec();
     if (!foundUser) return res.sendStatus(401); //Unauthorized || User Not Found
 
     // check password with bcrypt
@@ -29,14 +25,10 @@ const handleLogin = async (req, res) => {
             { expiresIn: '1d' }
         );
 
-        const otherUsers = usersDB.users.filter(person => person.email != foundUser.email);
-        const currentUser = { ...foundUser, refreshToken };
-        usersDB.setUsers([...otherUsers, currentUser]);
-        await fsPromises.writeFile(
-            path.join(__dirname, '..', 'model', 'users.json'),
-            JSON.stringify(usersDB.users)
-        );
-        res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', secure: true, maxAge: 24 * 60 * 60 * 1000 })
+        foundUser.refreshToken = refreshToken;
+        const result = await foundUser.save();
+        console.log(result);
+        res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 }) // in prod add secure: true 
         res.json({ accessToken });
     }
     else {
