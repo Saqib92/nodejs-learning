@@ -9,6 +9,8 @@ const verifyJWT = require('./src/middleware/verifyJWT');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const connectDB = require('./src/config/dbConn');
+const fileUpload = require('express-fileupload');
+
 const PORT = process.env.PORT || 3500;
 
 //Connect to MONGODB
@@ -18,6 +20,7 @@ connectDB();
 //Built In middlewares 
 
 app.use(credentials);
+app.use(fileUpload());
 
 // FOR Cors
 app.use(cors(corsOptions));
@@ -43,6 +46,7 @@ app.use('/register', require('./src/routes/api/register'));
 app.use('/auth', require('./src/routes/api/auth'));
 app.use('/refresh', require('./src/routes/api/refresh'));
 app.use('/logout', require('./src/routes/api/logout'));
+app.use('/imageUpload', require('./src/routes/api/imageUpload'));
 
 // Protected Routes with JWT
 app.use(verifyJWT);
