@@ -6,7 +6,7 @@ const handelNewUser = async (req, res) => {
     if (!fullName || !email || !password) return res.status(400).json({ status: false, message: 'Full Name, Username and Password are Required' });
     //check for duplicate username
     const duplicate = await User.findOne({ email: email }).exec();
-    if (duplicate) return res.sendStatus(409);
+    if (duplicate) return res.status(409).json({ status: false, message: 'Email Already Teken'});
 
     try {
         //password encrypt

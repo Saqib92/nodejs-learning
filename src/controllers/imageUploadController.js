@@ -31,7 +31,7 @@ const handelImage = async (req, res, next) => {
         });
     }
 
-    Boolean(file.length) ? file.forEach((file) => move(file)) : move(file);
+    Array.isArray(file) ? file.forEach((file) => move(file)) : move(file);
     return res.send({ success: true, message: 'uploaded successfully', data });
 
 }
