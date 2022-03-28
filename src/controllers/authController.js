@@ -4,10 +4,10 @@ const jwt = require('jsonwebtoken');
 
 const handleLogin = async (req, res) => {
     const { email, password } = req.body;
-    if (!email || !password) return res.status(400).json({ 'message': 'Username and Password are Required' });
+    if (!email || !password) return res.status(400).json({ status: false, message: 'Email and Password are Required' });
 
     const foundUser = await User.findOne({ email: email }).exec();
-    if (!foundUser) return res.sendStatus(401); //Unauthorized || User Not Found
+    if (!foundUser) return res.status(401).json({ status: false, message: 'Email and Password are not Correct' }); //Unauthorized || User Not Found
 
     // check password with bcrypt
     const match = await bcrypt.compare(password, foundUser.password);
@@ -16,18 +16,18 @@ const handleLogin = async (req, res) => {
         const accessToken = jwt.sign(
             { 'email': foundUser.email },
             process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: '30s' }
+            { expiresIn: '90d' }
         );
         const refreshToken = jwt.sign(
             { 'email': foundUser.email },
             process.env.REFRESH_TOKEN_SECRET,
-            { expiresIn: '1d' }
+            { expiresIn: '90d' }
         );
 
         foundUser.refreshToken = refreshToken;
         const result = await foundUser.save();
         res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 }) // in prod add secure: true 
-        res.json({ accessToken });
+        res.json({ accessToken, status: true });
     }
     else {
         res.sendStatus(401);
