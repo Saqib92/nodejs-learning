@@ -89,7 +89,8 @@ io.on('connection', (socket) => {
         senderId: message.senderId,
         receiverId: message.receiverId,
         message: message.message,
-        isFile: message.isFile
+        isFile: message.isFile,
+        roomId: message.roomId
       })
       io.emit('message', { data: result });
     } catch (err) {

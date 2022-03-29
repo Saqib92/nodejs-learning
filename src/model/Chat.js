@@ -17,6 +17,10 @@ const chatSchema = new Schema({
     isFile:{
         type: Boolean,
         required: true
+    },
+    roomId: {
+        type: String,
+        required: true
     }
 },
 {
