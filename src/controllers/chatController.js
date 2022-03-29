@@ -12,7 +12,7 @@ const getAllChats = async (req, res) => {
 
 const createRoom = async (req, res) => {
     const userIds = [req.body.userOne, req.body.userTwo];
-    const foundRoom = await Room.find({ users: userIds }).exec();
+    const foundRoom = await Room.find({ users: { $all: userIds } }).exec();
     if (foundRoom.length <= 0) {
         try {
             const result = await Room.create({
