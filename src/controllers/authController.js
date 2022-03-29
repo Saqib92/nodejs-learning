@@ -31,7 +31,7 @@ const handleLogin = async (req, res) => {
         res.json({ accessToken, status: true });
     }
     else {
-        res.sendStatus(401);
+        res.status(401).json({ status: false, message: 'Email and Password are not Correct' });;
     }
 }
 
