@@ -1,5 +1,4 @@
 const User = require('../model/User');
-const jwt = require('jsonwebtoken');
 
 const getUserByToken = async (req, res) => {
     const cookies = req.headers.authorization.split(' ')[1];

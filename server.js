@@ -50,6 +50,7 @@ app.use('/logout', require('./src/routes/api/logout'));
 // Protected Routes with JWT
 app.use(verifyJWT);
 app.use('/user', require('./src/routes/api/users'));
+app.use('/chats', require('./src/routes/api/chat'));
 app.use('/employees', require('./src/routes/api/employees'));
 app.use('/imageUpload', require('./src/routes/api/imageUpload'));
 
