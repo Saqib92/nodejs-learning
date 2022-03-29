@@ -10,6 +10,8 @@ const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const connectDB = require('./src/config/dbConn');
 const fileUpload = require('express-fileupload');
+let io = require('socket.io')();
+const Chat = require('./src/model/Chat');
 
 const PORT = process.env.PORT || 3500;
 
@@ -66,10 +68,34 @@ app.all('*', (req, res) => {
   }
 })
 
-
 mongoose.connection.once('open', () => {
   console.log('Connected to MongoDB')
-  app.listen(PORT, () => {
+  const serverInstance = app.listen(PORT, () => {
     console.log(`Server Running at port: ${PORT}`);
   })
+  io.attach(serverInstance, {
+    cors: {
+      origin: '*',
+    }
+  });
 })
+
+
+io.on('connection', (socket) => {
+
+  socket.on('message', async (message) => {
+    try {
+      const result = await Chat.create({
+        senderId: message.senderId,
+        receiverId: message.receiverId,
+        message: message.message,
+        isFile: message.isFile
+      })
+      io.emit('message', { data: result });
+    } catch (err) {
+      console.error(err)
+    }
+  });
+
+
+});
