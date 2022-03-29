@@ -2,8 +2,11 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../../controllers/userController');
 
-router.route('/')
-    .get(userController.getUserByToken)
+router.route('/getUserDetail')
+    .get(userController.getUserByToken);
+
+router.route('/getAllUsers')
+    .get(userController.getAllUsers)
 //.post(employeesController.createNewEmployee)
 
 // router.route('/:id')

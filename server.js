@@ -49,7 +49,7 @@ app.use('/logout', require('./src/routes/api/logout'));
 
 // Protected Routes with JWT
 app.use(verifyJWT);
-app.use('/getUserDetail', require('./src/routes/api/users'));
+app.use('/user', require('./src/routes/api/users'));
 app.use('/employees', require('./src/routes/api/employees'));
 app.use('/imageUpload', require('./src/routes/api/imageUpload'));
 
