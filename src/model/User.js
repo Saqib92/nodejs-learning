@@ -14,6 +14,7 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    deviceToken: Array,
     refreshToken: String,
     loginToken: Array
 })
