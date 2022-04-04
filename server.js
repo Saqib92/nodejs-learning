@@ -12,7 +12,7 @@ const connectDB = require('./src/config/dbConn');
 const fileUpload = require('express-fileupload');
 let io = require('socket.io')();
 const FCM = require('fcm-node');
-const serverKey = process.env.FCMKEY;
+const serverKey = 'AAAACbp5ckc:APA91bHDM_sNvyEQIpKYK6t60muMNpjrVeLXud2Bd2AI3nC-ftGMXYYsEVqYHIrNMWz-uGAOHduk3uhyn2zWycrWf38S6NzGv5lFmnKv1KX4cPa5YsbbJzydEdZOQORsHog0ZhyhlrxB';
 const fcm = new FCM(serverKey);
 
 const Chat = require('./src/model/Chat');
