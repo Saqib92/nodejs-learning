@@ -11,8 +11,12 @@ const mongoose = require('mongoose');
 const connectDB = require('./src/config/dbConn');
 const fileUpload = require('express-fileupload');
 let io = require('socket.io')();
-const Chat = require('./src/model/Chat');
+const FCM = require('fcm-node');
+const serverKey = process.env.FCMKEY;
+const fcm = new FCM(serverKey);
 
+const Chat = require('./src/model/Chat');
+const User = require('./src/model/User');
 const PORT = process.env.PORT || 3500;
 
 //Connect to MONGODB
@@ -81,6 +85,24 @@ mongoose.connection.once('open', () => {
 })
 
 
+function sendNotification(token, m) {
+  var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
+    to: token,
+    notification: {
+      title: 'New Message',
+      body: m
+    }
+  };
+
+  fcm.send(message, function (err, response) {
+    if (err) {
+      console.log("Something has gone wrong!");
+    } else {
+      console.log("Successfully sent with response: ", response);
+    }
+  });
+}
+
 io.on('connection', (socket) => {
 
   socket.on('message', async (message) => {
@@ -92,11 +114,12 @@ io.on('connection', (socket) => {
         isFile: message.isFile,
         roomId: message.roomId
       })
+      const foundUser = await User.findOne({ _id: message.receiverId }).exec();
+      sendNotification(foundUser.deviceToken, message.message)
       io.emit('message', { data: result });
     } catch (err) {
       console.error(err)
     }
   });
-
 
 });
