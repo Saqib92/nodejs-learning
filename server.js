@@ -11,9 +11,8 @@ const mongoose = require('mongoose');
 const connectDB = require('./src/config/dbConn');
 const fileUpload = require('express-fileupload');
 let io = require('socket.io')();
-const FCM = require('fcm-node');
-const serverKey = 'AAAACbp5ckc:APA91bHDM_sNvyEQIpKYK6t60muMNpjrVeLXud2Bd2AI3nC-ftGMXYYsEVqYHIrNMWz-uGAOHduk3uhyn2zWycrWf38S6NzGv5lFmnKv1KX4cPa5YsbbJzydEdZOQORsHog0ZhyhlrxB';
-const fcm = new FCM(serverKey);
+var fcm = require('fcm-notification');
+var FCM = new fcm('./src/config/chattime-aa524-firebase-adminsdk-ew2yl-17d22e893b.json');
 
 const Chat = require('./src/model/Chat');
 const User = require('./src/model/User');
@@ -86,27 +85,29 @@ mongoose.connection.once('open', () => {
 
 
 function sendNotification(token, m) {
-  var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
-    to: token,
+  var message = {
+    data: {},
     notification: {
       title: 'New Message',
       body: m
     }
   };
 
-  fcm.send(message, function (err, response) {
+  FCM.sendToMultipleToken(message, token, function (err, response) {
     if (err) {
-      console.log("Something has gone wrong!");
+      //console.log('err--', err);
     } else {
-      console.log("Successfully sent with response: ", response);
+      //console.log('response-----', response);
     }
-  });
+  })
+
 }
 
 io.on('connection', (socket) => {
 
   socket.on('message', async (message) => {
     try {
+      const foundUser = await User.findOne({ _id: message.receiverId }).exec();
       const result = await Chat.create({
         senderId: message.senderId,
         receiverId: message.receiverId,
@@ -114,7 +115,6 @@ io.on('connection', (socket) => {
         isFile: message.isFile,
         roomId: message.roomId
       })
-      const foundUser = await User.findOne({ _id: message.receiverId }).exec();
       sendNotification(foundUser.deviceToken, message.message)
       io.emit('message', { data: result });
     } catch (err) {
