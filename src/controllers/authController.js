@@ -26,7 +26,9 @@ const handleLogin = async (req, res) => {
 
         foundUser.refreshToken = refreshToken;
         foundUser.loginToken.push(accessToken);
-        foundUser.deviceToken.push(deviceToken);
+        if(deviceToken != ''){
+            foundUser.deviceToken.push(deviceToken);
+        }
         const result = await foundUser.save();
         res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 }) // in prod add secure: true 
         res.json({ accessToken, status: true });
