@@ -8,6 +8,21 @@ const getAllChats = async (req, res) => {
     const chat = await Chat.find({ roomId: req.params.id }).exec();
     if (!chat) return res.status(204).json({ status: false, message: 'No Chat Found!' });
     res.json({ status: true, data: chat });
+
+    // const limit = 2;
+    // const offset = 2;
+    // const chat = await Chat.find({ roomId: req.params.id }).skip(offset).limit(limit).exec();
+    // const chatCount = await Chat.count()
+    // const totalPages = Math.ceil(chatCount / limit)
+    // const currentPage = Math.ceil(chatCount % offset)
+    // res.status(200).send({
+    //   data: chat,
+    //   paging: {
+    //     total: chatCount,
+    //     page: currentPage,
+    //     pages: totalPages,
+    //   },
+    // })
 }
 
 const createRoom = async (req, res) => {
