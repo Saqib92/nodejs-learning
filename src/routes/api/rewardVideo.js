@@ -3,6 +3,6 @@ const router = express.Router();
 const rewardVideoController = require('../../controllers/rewardVideoController');
 
 router.route('/')
-    .get(rewardVideoController.getRewardData) // now for Testing
+    .get(rewardVideoController.getRewardData)
 
 module.exports = router;

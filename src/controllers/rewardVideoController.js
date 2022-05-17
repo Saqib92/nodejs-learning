@@ -8,7 +8,6 @@ const getRewardData = async (req, res) => {
     foundUser.coins += 5;
     const result = await foundUser.save();
     res.json({ status: true, message: "Data Saved Successfully"});
-    // now for Testing
 }
 
 module.exports = {
