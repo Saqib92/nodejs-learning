@@ -51,6 +51,7 @@ app.use('/register', require('./src/routes/api/register'));
 app.use('/auth', require('./src/routes/api/auth'));
 app.use('/refresh', require('./src/routes/api/refresh'));
 app.use('/logout', require('./src/routes/api/logout'));
+app.use('/rewardVideo', require('./src/routes/api/rewardvideo'));
 
 // Protected Routes with JWT
 app.use(verifyJWT);

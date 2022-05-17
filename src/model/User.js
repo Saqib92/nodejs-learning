@@ -14,9 +14,13 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    coins: {
+        type: Number,
+        default: 0
+    },
     deviceToken: Array,
     refreshToken: String,
-    loginToken: Array
+    loginToken: Array,
 })
 
 module.exports = mongoose.model('User', userSchema)
